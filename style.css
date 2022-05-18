@@ -8,7 +8,7 @@
 
 
 .item {
-    width:25%;
+    width:300px;
     color:aquamarine;
     margin: 10px;
     padding: 10px;
@@ -18,4 +18,10 @@
     line-height: 30px;/*行の高さ*/
     vertical-align: middle;
 
+}
+
+
+.pos-1
+{
+    order: 1;
 }
