@@ -7,6 +7,15 @@
 }
 
 
-.container div{
+.item {
     width:25%;
+    color:aquamarine;
+    margin: 10px;
+    padding: 10px;
+    width: 30px;
+    height: 30px;
+    text-align:center; /*横の行中央揃え*/
+    line-height: 30px;/*行の高さ*/
+    vertical-align: middle;
+
 }
