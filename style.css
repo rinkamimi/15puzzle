@@ -1,9 +1,10 @@
 .container {
     display: flex;
     flex-wrap: wrap;
-    flex-direction: row;
+   /* flex-direction: row;
     justify-content:center;
-    align-content: space-between;
+    align-content: space-between;*/
+    width: 300px;
 }
 
 
@@ -24,4 +25,32 @@
 .pos-1
 {
     order: 1;
+}
+.pos-2
+{
+    order: 2;    
+}
+.pos-3
+{
+    order: 3;
+}
+.pos-4
+{
+    order: 4;    
+}
+.pos-5
+{
+    order: 5;
+}
+.pos-6
+{
+    order: 6;    
+}
+.pos-7
+{
+    order: 7;
+}
+.pos-8
+{
+    order: 8;    
 }
