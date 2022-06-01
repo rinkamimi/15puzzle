@@ -1,5 +1,4 @@
 
+const piece01 = document.querySelector('.pos-1');
 
-for(var count = 0; count < item; count++){
-    item.style.order[count] = parseint(Math.random()*16)+1;
-}
+piece01.style.order = parseInt(Math.random() * 16) + 1;
