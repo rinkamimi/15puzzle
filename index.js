@@ -2,6 +2,7 @@
 let n = 1
 for (let n = 1;n<=16;n++){
     const piece = document.querySelector('.pos-'+n);
+    //memo:ランダムに数値を決めるとかぶる
     piece.style.order = parseInt(Math.random() * 16) + 1;
 }
 
