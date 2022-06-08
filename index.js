@@ -11,7 +11,7 @@ for (let n = 1; n <= 16; n = n + 1) {
     console.log('ピースがクリックされました');
   }
   
-  for (let i = 1; i <= 16; n = i + 1) {
+for (let i = 1; i <= 16; n = i + 1) {
 
   const piece01 = document.querySelector('.pos-'+i);
   
