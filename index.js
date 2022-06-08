@@ -1,5 +1,14 @@
 
-const piece01 = document.querySelector('.pos-1');
+let n = 1
+for (let n = 1;n<=16;n++){
+    const piece = document.querySelector('.pos-'+n);
+    piece.style.order = parseInt(Math.random() * 16) + 1;
+}
+
+
+//イメージとしては'pos-'+n
+
+/*const piece01 = document.querySelector('.pos-1');
 
 piece01.style.order = parseInt(Math.random() * 16) + 1;
 
@@ -62,4 +71,4 @@ piece15.style.order = parseInt(Math.random() * 16) + 1;
 const piece16 = document.querySelector('.pos-□');
 
 piece16.style.order = parseInt(Math.random() * 16) + 1;
-
+*/
