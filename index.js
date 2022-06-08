@@ -15,7 +15,7 @@ for (let i = 1; i <= 15; i = i + 1) {
 
   const piece = document.querySelector('.pos-'+i);
   
-  piece01.addEventListener('click', pieceClickHandler);
+  piece.addEventListener('click', pieceClickHandler);
   }
   
 
