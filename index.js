@@ -11,11 +11,11 @@ for (let n = 1; n <= 16; n = n + 1) {
     console.log('ピースがクリックされました');
   }
   
-for (let i = 1; i <= 16; i = i + 1) {
+for (let i = 1; i <= 15; i = i + 1) {
 
-  const piece01 = document.querySelector('.pos-'+i);
+  const piece = document.querySelector('.pos-'+i);
   
-  piece01.addEventListener('click', pieceClickHandler);
+  piece01.addEventListener('click',[i], pieceClickHandler);
   }
   
 
