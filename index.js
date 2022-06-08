@@ -59,10 +59,7 @@ const piece15 = document.querySelector('.pos-15');
 
 piece15.style.order = parseInt(Math.random() * 16) + 1;
 
-const piece16 = document.querySelector('.pos-16');
+const piece16 = document.querySelector('.pos-□');
 
 piece16.style.order = parseInt(Math.random() * 16) + 1;
 
-for(var count = 0; count < item; count++){
-    item.style.order[count] = parseint(Math.random()*16)+1;
-}
