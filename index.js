@@ -1,174 +1,119 @@
-// State 相当の値を準備 (今回の場合は配列)
-// ----------------------------------------------------------------------------
-var up;    // 空白ピース基準で 1 つ上のピースを記録
-var down;  // 空白ピース基準で 1 つ下のピースを記録
-var left;  // 空白ピース基準で 1 つ左のピースを記録
-var right; // 空白ピース基準で 1 つ右のピースを記録
+const PrefectureCheckbox = {
+  data() {
+    return {
+      prefectures: [
+        '北海道',
+        '青森県',
+        '岩手県',
+        '宮城県',
+        '秋田県',
+        '山形県',
+        '福島県',
+        '茨城県',
+        '栃木県',
+        '群馬県',
+        '埼玉県',
+        '千葉県',
+        '東京都',
+        '神奈川県',
+        '新潟県',
+        '富山県',
+        '石川県',
+        '福井県',
+        '山梨県',
+        '長野県',
+        '岐阜県',
+        '静岡県',
+        '愛知県',
+        '三重県',
+        '滋賀県',
+        '京都府',
+        '大阪府',
+        '兵庫県',
+        '奈良県',
+        '和歌山県',
+        '鳥取県',
+        '島根県',
+        '岡山県',
+        '広島県',
+        '山口県',
+        '徳島県',
+        '香川県',
+        '愛媛県',
+        '高知県',
+        '福岡県',
+        '佐賀県',
+        '長崎県',
+        '熊本県',
+        '大分県',
+        '宮崎県',
+        '鹿児島県',
+        '沖縄県',
+      ],
+    };
+  },
+  /* html */
+  template: `
+  <span v-for="(prefecture, index) in prefectures">
+    <input type="checkbox" v-bind:id="'e' + index">
+    <label v-bind:for="'e' + index">{{ prefecture }}</label>
+  </span>
+  `,
+};
 
-var peaces = [
-  6,  4,  3, 10,
-  7,  1,  2,  5,
-  9, 13, 11,  8,
- 15, 14, 16, 12,
-];
+const PopulationBarPlot = {
+  props: [ 'api' ],
+  data() {
+    return {
+      populations: [ 100, 90, 80, 70, 60, 50, 40, 30, 20, 10 ],
+      result: '',
+    };
+  },
+  /* html */
+  template: `
+  <div>{{ result }}</div>
+  <button v-on:click="updateGraph">更新</button>
+  <div class="container">
+    <div
+      v-for="population in populations"
+      class="item"
+      v-bind:style="'height: ' + population + 'px;'"
+    ></div>
+  </div>
+  `,
+  methods: {
+    async updateGraph() {
+      let xs = await getPopulations(this.api, 27);
 
+      // JSON から、'result' -> 'data' -> 0 番目 -> 'data'，と辿った箇所を xs に代入
+      xs = xs['result']['data'][0]['data'];
 
-// 空白ピースを基準に、上下左右のピースを調べる関数
-// ----------------------------------------------------------------------------
-function calcAdjacentPeaces() {
-  const empty = peaces[15];
+      // xs を for 文で回し、中身の value をそれぞれ表示する
+      /*for (const x of xs) {
+        console.log(x.value);
+      }
+      */
+      let ys =[]
+      ys = xs.map(function(x) {
+        return x.value / 20000;
+    });
+       this.populations = ys;
+      // TODO: ↑の for 文で、数値の配列をうまく作り、this.result に代入する
+      //this.result = xs;
+    },
+  },
+};
 
-  let temp_up    = empty - 4;
-  let temp_down  = empty + 4;
-  let temp_left  = empty - 1;
-  let temp_right = empty + 1;
+const RootComponent = {
+  data() {
+    return {
+      'api': '',
+    };
+  },
+  components: {
+    PrefectureCheckbox,
+    PopulationBarPlot,
+  },
+};
 
-  if (temp_up   < 1  ) temp_up    = null;
-  if (temp_down > 16 ) temp_down  = null;
-  if (empty % 4 === 1) temp_left  = null;
-  if (empty % 4 === 0) temp_right = null;
-
-  up    = temp_up;
-  down  = temp_down;
-  left  = temp_left;
-  right = temp_right;
-}
-
-
-// Component 相当の関数を準備 (State => View にあたるもの)
-// ----------------------------------------------------------------------------
-function component() {
-  for (let n = 0; n < 16; n = n + 1) {
-    const piece = document.querySelector('.pos-' + (n + 1));
-  
-    piece.style.order = peaces[n];
-  }
-}
-
-
-// 初期化処理 (WIP: 全てのピースをランダムに配置する)
-// ----------------------------------------------------------------------------
-component();
-calcAdjacentPeaces();
-
-
-// ピースがクリックされたときに実行する処理 (関数)
-// ----------------------------------------------------------------------------
-function pieceClickHandler(event) {
-  // event.target からピースの番号 N を特定する (文字になっているので数値に変換もする)
-  const N = Number(event.target.innerHTML);
-
-  if (peaces[N - 1] === up   ) {
-    console.log('上にいるので、移動して OK');
-    const temp = peaces[15];
-    peaces[15] = peaces[N-1];
-    peaces[N-1]=temp;
-
-    component();
-    calcAdjacentPeaces();
-  }
-  else if (peaces[N - 1] === down ){ 
-    console.log('下にいるので、移動して OK');
-    const temp = peaces[15];
-    peaces[15] = peaces[N-1];
-    peaces[N-1]=temp;
-
-    component();
-    calcAdjacentPeaces();
-}
-  else if (peaces[N - 1] === left ){ 
-    console.log('左にいるので、移動して OK');
-    const temp = peaces[15];
-    peaces[15] = peaces[N-1];
-    peaces[N-1]=temp;
-
-    component();
-    calcAdjacentPeaces();
-
-  }
-  else if (peaces[N - 1] === right){
-     console.log('右にいるので、移動して OK');
-     const temp = peaces[15];
-    peaces[15] = peaces[N-1];
-    peaces[N-1]=temp;
-
-    component();
-    calcAdjacentPeaces();
-
-  }
-}
-
-
-// 1 ～ 15 番ピースのクリックを監視し、クリックされたら pieceClickHandler を呼ぶ
-// ----------------------------------------------------------------------------
-for (let n = 1; n <= 15; n = n + 1) {
-  const piece = document.querySelector('.pos-' + n);
-
-  piece.addEventListener('click', pieceClickHandler);
-}
-//イメージとしては'pos-'+n
-
-/*const piece01 = document.querySelector('.pos-1');
-
-piece01.style.order = parseInt(Math.random() * 16) + 1;
-
-const piece02 = document.querySelector('.pos-2');
-
-piece02.style.order = parseInt(Math.random() * 16) + 1;
-
-const piece03 = document.querySelector('.pos-3');
-
-piece03.style.order = parseInt(Math.random() * 16) + 1;
-
-const piece04 = document.querySelector('.pos-4');
-
-piece04.style.order = parseInt(Math.random() * 16) + 1;
-
-const piece05 = document.querySelector('.pos-5');
-
-piece05.style.order = parseInt(Math.random() * 16) + 1;
-
-const piece06 = document.querySelector('.pos-6');
-
-piece06.style.order = parseInt(Math.random() * 16) + 1;
-
-const piece07 = document.querySelector('.pos-7');
-
-piece07.style.order = parseInt(Math.random() * 16) + 1;
-
-const piece08 = document.querySelector('.pos-8');
-
-piece08.style.order = parseInt(Math.random() * 16) + 1;
-
-const piece09 = document.querySelector('.pos-9');
-
-piece09.style.order = parseInt(Math.random() * 16) + 1;
-
-const piece10 = document.querySelector('.pos-10');
-
-piece10.style.order = parseInt(Math.random() * 16) + 1;
-
-const piece11 = document.querySelector('.pos-11');
-
-piece11.style.order = parseInt(Math.random() * 16) + 1;
-
-const piece12 = document.querySelector('.pos-12');
-
-piece12.style.order = parseInt(Math.random() * 16) + 1;
-
-const piece13 = document.querySelector('.pos-13');
-
-piece13.style.order = parseInt(Math.random() * 16) + 1;
-
-const piece14 = document.querySelector('.pos-14');
-
-piece14.style.order = parseInt(Math.random() * 16) + 1;
-
-const piece15 = document.querySelector('.pos-15');
-
-piece15.style.order = parseInt(Math.random() * 16) + 1;
-
-const piece16 = document.querySelector('.pos-□');
-
-piece16.style.order = parseInt(Math.random() * 16) + 1;
-*/
+Vue.createApp(RootComponent).mount('#app');
