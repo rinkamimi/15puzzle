@@ -1,119 +1,118 @@
-const PrefectureCheckbox = {
-  data() {
-    return {
-      prefectures: [
-        '北海道',
-        '青森県',
-        '岩手県',
-        '宮城県',
-        '秋田県',
-        '山形県',
-        '福島県',
-        '茨城県',
-        '栃木県',
-        '群馬県',
-        '埼玉県',
-        '千葉県',
-        '東京都',
-        '神奈川県',
-        '新潟県',
-        '富山県',
-        '石川県',
-        '福井県',
-        '山梨県',
-        '長野県',
-        '岐阜県',
-        '静岡県',
-        '愛知県',
-        '三重県',
-        '滋賀県',
-        '京都府',
-        '大阪府',
-        '兵庫県',
-        '奈良県',
-        '和歌山県',
-        '鳥取県',
-        '島根県',
-        '岡山県',
-        '広島県',
-        '山口県',
-        '徳島県',
-        '香川県',
-        '愛媛県',
-        '高知県',
-        '福岡県',
-        '佐賀県',
-        '長崎県',
-        '熊本県',
-        '大分県',
-        '宮崎県',
-        '鹿児島県',
-        '沖縄県',
-      ],
-    };
-  },
-  /* html */
-  template: `
-  <span v-for="(prefecture, index) in prefectures">
-    <input type="checkbox" v-bind:id="'e' + index">
-    <label v-bind:for="'e' + index">{{ prefecture }}</label>
-  </span>
-  `,
-};
+// State 相当の値を準備
+// ----------------------------------------------------------------------------
+let up;    // 空白ピース基準で 1 つ上のピースの場所を記録
+let down;  // 空白ピース基準で 1 つ下のピースの場所を記録
+let left;  // 空白ピース基準で 1 つ左のピースの場所を記録
+let right; // 空白ピース基準で 1 つ右のピースの場所を記録
+let count = 0;
 
-const PopulationBarPlot = {
-  props: [ 'api' ],
-  data() {
-    return {
-      populations: [ 100, 90, 80, 70, 60, 50, 40, 30, 20, 10 ],
-      result: '',
-    };
-  },
-  /* html */
-  template: `
-  <div>{{ result }}</div>
-  <button v-on:click="updateGraph">更新</button>
-  <div class="container">
-    <div
-      v-for="population in populations"
-      class="item"
-      v-bind:style="'height: ' + population + 'px;'"
-    ></div>
-  </div>
-  `,
-  methods: {
-    async updateGraph() {
-      let xs = await getPopulations(this.api, 27);
+// 各ピースの場所を記録
+let positions = [
+   6,  4,  3, 10,
+   7,  2,  1,  5,
+   9, 13, 11,  8,
+  15, 14, 12, 16,
+];
 
-      // JSON から、'result' -> 'data' -> 0 番目 -> 'data'，と辿った箇所を xs に代入
-      xs = xs['result']['data'][0]['data'];
+function randomizePositions(array){
+  for(var i = (array.length -1); 0 < i; i--){
+    var r = Math.floor(Math.random() * (i + 1));
 
-      // xs を for 文で回し、中身の value をそれぞれ表示する
-      /*for (const x of xs) {
-        console.log(x.value);
-      }
-      */
-      let ys =[]
-      ys = xs.map(function(x) {
-        return x.value / 20000;
-    });
-       this.populations = ys;
-      // TODO: ↑の for 文で、数値の配列をうまく作り、this.result に代入する
-      //this.result = xs;
-    },
-  },
-};
+    var tmp = array[i];
+    array[i] = array[r];
+    array[r] = tmp;
+  }
+  return array;
+}
 
-const RootComponent = {
-  data() {
-    return {
-      'api': '',
-    };
-  },
-  components: {
-    PrefectureCheckbox,
-    PopulationBarPlot,
-  },
-};
 
-Vue.createApp(RootComponent).mount('#app');
+
+// 空白ピースを基準に、上下左右のピースの場所を調べる関数
+// ----------------------------------------------------------------------------
+function calcAdjacentPositions() {
+  const empty = positions[15];
+
+  let temp_up    = empty - 4;
+  let temp_down  = empty + 4;
+  let temp_left  = empty - 1;
+  let temp_right = empty + 1;
+
+  if (temp_up   <   1 ) temp_up    = null;
+  if (temp_down >   16) temp_down  = null;
+  if (empty % 4 === 1 ) temp_left  = null;
+  if (empty % 4 === 0 ) temp_right = null;
+
+  up    = temp_up;
+  down  = temp_down;
+  left  = temp_left;
+  right = temp_right;
+}
+
+
+// Component 相当の関数を準備 (State => View にあたるもの)
+// ----------------------------------------------------------------------------
+function component() {
+  for (let n = 0; n < 16; n = n + 1) {
+    const piece = document.querySelector('.piece-' + (n + 1));
+
+    piece.style.order = positions[n];
+  }
+  document.getElementById('count').innerHTML = "現在のクリック数 : " +  count ;
+}
+
+
+// 初期化処理
+// ----------------------------------------------------------------------------
+randomizePositions(positions);
+component();
+calcAdjacentPositions();
+
+
+function isFinished(array){
+  for(var i = 0; (array.length -1) > i; i++){
+    if (i + 1 == array[i]){
+
+    }else{
+      return false;
+    }
+    if (array[i] == (array.length -1)){
+      window.alert("Clear! おめでとうございます！");
+      return true;
+    }
+  }
+  document.location.reroad();
+}
+
+
+// ピースがクリックされたときに実行する処理 (関数)
+// ----------------------------------------------------------------------------
+function pieceClickHandler(event) {
+  // event.target からピースの番号 N を特定する (文字で取得されるので数値に変換する)
+  const N = Number(event.target.innerText);
+
+  if (
+    positions[N - 1] === up   ||
+    positions[N - 1] === down ||
+    positions[N - 1] === left ||
+    positions[N - 1] === right
+  ) {
+    // ピースの場所を入れ替える
+    [ positions[15], positions[N - 1] ] = [ positions[N - 1], positions[15] ];
+
+    // State => View の反映を行う
+    count++ ;
+    component();
+
+    // 隣接するピースを再計算する
+    calcAdjacentPositions(); 
+  }
+}
+
+
+// 1 ～ 15 番ピースのクリックを監視し、クリックされたら pieceClickHandler を呼ぶ
+// ----------------------------------------------------------------------------
+for (let n = 1; n <= 15; n = n + 1) {
+  const piece = document.querySelector('.piece-' + n);
+
+  piece.addEventListener('click', pieceClickHandler);
+}

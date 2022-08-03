@@ -5,32 +5,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>株式会社ゆめみのコーディングテスト</title>
-
-  <!-- Vue.js の読み込み -->
-  <script src="https://unpkg.com/vue@next"></script>
+  <title>15 パズル</title>
 
   <!-- 独自 CSS の読み込み -->
-  <link rel="stylesheet" href="index.css">
+  <link href="index.css" rel="stylesheet">
 </head>
 
 <body>
-  <div id="app">
-    <h2>API キー</h2>
-    <input type="text" v-model="api">
+  <div class="board">
+    <div class="piece piece-1">1</div>
+    <div class="piece piece-2">2</div>
+    <div class="piece piece-3">3</div>
+    <div class="piece piece-4">4</div>
+    <div class="piece piece-5">5</div>
+    <div class="piece piece-6">6</div>
+    <div class="piece piece-7">7</div>
+    <div class="piece piece-8">8</div>
+    <div class="piece piece-9">9</div>
+    <div class="piece piece-10">10</div>
+    <div class="piece piece-11">11</div>
+    <div class="piece piece-12">12</div>
+    <div class="piece piece-13">13</div>
+    <div class="piece piece-14">14</div>
+    <div class="piece piece-15">15</div>
+    <div class="piece piece-16"></div>
+  </div>
 
-    <h2>都道府県</h2>
-    <prefecture-checkbox></prefecture-checkbox>
-
-    <h2>人口グラフ</h2>
-    <population-bar-plot
-      v-bind:api="api"
-    ></population-bar-plot>
+  <div id = "count">
+    count
   </div>
 </body>
 
 <!-- 独自 JavaScript の読み込み -->
-<script src="api.js"></script>
 <script src="index.js"></script>
 
 </html>
